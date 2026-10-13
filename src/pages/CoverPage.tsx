@@ -87,7 +87,7 @@ function CoverCard({
 
   return (
     <article className={`cover-card${pending ? " pending" : ""}`}>
-      {src && !pending ? (
+      {!pending && src ? (
         <button
           type="button"
           className="cover-card-media"
@@ -103,6 +103,10 @@ function CoverCard({
             }}
           />
         </button>
+      ) : !pending ? (
+        <div className="cover-card-media cover-card-loading-media" aria-label="封面加载中">
+          <div className="cover-card-empty">加载中…</div>
+        </div>
       ) : (
         <div className="cover-card-media cover-card-pending-media" aria-label="封面待补充">
           <div className="cover-card-empty">待补充</div>
@@ -124,7 +128,9 @@ function CoverCard({
             ? (item.note || "封面未配置")
             : size
               ? `长宽比 ${formatRatio(size.w, size.h)} · ${size.w}×${size.h}`
-              : "尺寸读取中…"}
+              : src
+                ? "尺寸读取中…"
+                : "封面加载中…"}
         </p>
       </div>
     </article>
