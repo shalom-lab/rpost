@@ -1,5 +1,5 @@
-import { cachedLoadText } from "./local-cache";
-import { fetchRepoBlobUrl, fetchRepoText } from "./repo-content";
+import { cachedLoadBlobUrl, cachedLoadText } from "./local-cache";
+import { fetchRepoBlob, fetchRepoText } from "./repo-content";
 
 export type CoverItem = {
   id: string;
@@ -48,5 +48,5 @@ export function coverRepoPath(image: string | null): string | null {
 export async function loadCoverImageUrl(image: string | null): Promise<string | null> {
   const path = coverRepoPath(image);
   if (!path) return null;
-  return fetchRepoBlobUrl(path);
+  return cachedLoadBlobUrl(`blob:${path}`, () => fetchRepoBlob(path));
 }

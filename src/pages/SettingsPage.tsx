@@ -105,7 +105,7 @@ export default function SettingsPage() {
         <details>
           <summary>本地设置</summary>
           <p><code>{LS_GH_REPO}</code> 与 <code>{LS_GH_TOKEN}</code> 分别保存仓库和 Token。</p>
-          <p>文章清单、正文、封面清单缓存在浏览器 IndexedDB；有更新会后台校验并刷新。Token 不进 IndexedDB。</p>
+          <p>文章清单、正文、封面清单与封面图都持久化在浏览器 IndexedDB（关掉标签再开仍可用缓存，后台静默刷新）。Token 只在 localStorage，不进 IndexedDB。</p>
         </details>
       </div>
     </section>

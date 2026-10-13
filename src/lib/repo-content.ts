@@ -34,8 +34,8 @@ export async function fetchRepoText(path: string): Promise<string> {
   return response.text();
 }
 
-/** Read a binary file and return a blob: URL for <img>. Caller may revoke later. */
-export async function fetchRepoBlobUrl(path: string): Promise<string> {
+/** Read a binary file as Blob (for IndexedDB + blob: URL). */
+export async function fetchRepoBlob(path: string): Promise<Blob> {
   const { owner, repo, token } = repoParts();
   const clean = path.replace(/^\/+/, "");
   const url = `https://api.github.com/repos/${owner}/${repo}/contents/${clean}`;
@@ -48,5 +48,5 @@ export async function fetchRepoBlobUrl(path: string): Promise<string> {
   if (!response.ok) throw new Error(`无法读取图片（${response.status}）`);
   const buffer = await response.arrayBuffer();
   const mime = response.headers.get("content-type") || "application/octet-stream";
-  return URL.createObjectURL(new Blob([buffer], { type: mime }));
+  return new Blob([buffer], { type: mime });
 }

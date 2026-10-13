@@ -60,25 +60,18 @@ function CoverCard({
 
   useEffect(() => {
     let cancelled = false;
-    let blobUrl: string | null = null;
     setSrc(null);
     setSize(null);
     if (pending || !item.image) return;
     void loadCoverImageUrl(item.image)
       .then((url) => {
-        if (cancelled) {
-          if (url) URL.revokeObjectURL(url);
-          return;
-        }
-        blobUrl = url;
-        setSrc(url);
+        if (!cancelled) setSrc(url);
       })
       .catch(() => {
         if (!cancelled) setSrc(null);
       });
     return () => {
       cancelled = true;
-      if (blobUrl) URL.revokeObjectURL(blobUrl);
     };
   }, [item.image, pending]);
 

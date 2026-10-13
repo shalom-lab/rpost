@@ -25,6 +25,17 @@ npm run test:access
 
 可在「连接」页填写，也可事先写入 localStorage；启动会自动读。Token 不进仓库、不进前端打包。
 
+## IndexedDB 持久化
+
+库名 `rpost-cache-v2`：
+
+| Store | 内容 |
+|---|---|
+| `entries` | `content/index.json`、正文 Markdown、`cover/cover.json` 等文本 |
+| `blobs` | 封面图等二进制 |
+
+策略：先读本地缓存立刻展示，再后台打 GitHub API 校验；有变更才刷新 UI。连接页可「清除阅读缓存」。
+
 ## 与内容仓分工
 
 | 仓库 | 职责 |
