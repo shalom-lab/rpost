@@ -35,13 +35,15 @@ export default function App() {
       </header>
       <main>
         <Routes>
-          <Route path="/" element={<RequireAccess><HomePage /></RequireAccess>} />
-          <Route path="/articles" element={<Navigate to="/" replace />} />
-          <Route path="/article/:id" element={<RequireAccess><ArticlePage /></RequireAccess>} />
-          <Route path="/topics" element={<Navigate to="/" replace />} />
-          <Route path="/covers" element={<RequireAccess><CoverPage /></RequireAccess>} />
-          <Route path="/queue" element={<Navigate to="/" replace />} />
           <Route path="/settings" element={<SettingsPage />} />
+          <Route element={<RequireAccess />}>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/articles" element={<Navigate to="/" replace />} />
+            <Route path="/article/:id" element={<ArticlePage />} />
+            <Route path="/topics" element={<Navigate to="/" replace />} />
+            <Route path="/covers" element={<CoverPage />} />
+            <Route path="/queue" element={<Navigate to="/" replace />} />
+          </Route>
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
