@@ -1,0 +1,207 @@
+/* 默认 */
+#markmuse {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.8;
+  color: #2c2c2c;
+  background-color: #ffffff;
+  padding: 0 1rem;
+  max-width: 100%;
+}
+
+/* 荧光笔：预览用渐变；微信常丢掉 linear-gradient，浅实心底作兜底 */
+#markmuse h1 {
+  display: table;
+  font-size: 1.65em;
+  margin: 2rem auto 1.2rem;
+  padding: 0.2rem 0.12rem 0.4rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.35;
+  text-align: center;
+  letter-spacing: 0.05em;
+  border: none;
+  background-color: rgba(31, 61, 77, 0.1);
+  background-image: linear-gradient(180deg, transparent 65%, rgba(31, 61, 77, 0.28) 65%);
+}
+
+/* 二级 · 居中实心胶囊 */
+#markmuse h2 {
+  display: table;
+  font-size: 1.1em;
+  margin: 1.8rem auto 1rem;
+  padding: 0.38rem 1.25rem;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.45;
+  letter-spacing: 0.08em;
+  background: #1f3d4d;
+  border: none;
+  border-radius: 4px;
+  text-align: center;
+}
+
+/* 三级 · 斜切微标 */
+#markmuse h3 {
+  display: table;
+  font-size: 1.02em;
+  margin: 1.3rem 0 0.5rem;
+  padding: 0.2rem 0.85rem;
+  color: #ffffff;
+  font-weight: 600;
+  line-height: 1.45;
+  text-align: left;
+  border: none;
+  background: #5a8a9a;
+  border-radius: 10px 2px 10px 2px;
+}
+
+#markmuse p {
+  margin: 0.8rem 0;
+  line-height: 1.9;
+  text-align: justify;
+  word-spacing: 0.05em;
+}
+
+#markmuse code {
+  font-family: "SF Mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 0.9em;
+  padding: 0.2em 0.4em;
+  background-color: #f1f5f9;
+  border-radius: 3px;
+  color: #e83e8c;
+}
+
+#markmuse pre {
+  margin: 1rem 0;
+  padding: 2.5rem 1rem 1rem 1rem;
+  background-color: #2d2d2d;
+  border-radius: 8px;
+  overflow-x: auto;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+#markmuse pre::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #ff5f56;
+  box-shadow: 20px 0 0 #ffbd2e, 40px 0 0 #27c93f;
+}
+
+#markmuse pre code {
+  display: block;
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  font-size: 0.9em;
+  color: #e8e8e8;
+  font-family: "SF Mono", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* 引用 · 经典左边框 */
+#markmuse blockquote {
+  margin: 1.1rem 0;
+  padding: 0.7rem 1rem;
+  border-left: 3px solid #1f3d4d;
+  color: #4a4a4a;
+  background: #f8fafc;
+  border-radius: 0 4px 4px 0;
+  font-style: normal;
+}
+
+#markmuse strong {
+  font-weight: 600;
+  color: #1f2328;
+}
+
+#markmuse em {
+  font-style: italic;
+  color: #57606a;
+}
+
+#markmuse a {
+  color: #2b6a7a;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(43, 106, 122, 0.35);
+}
+
+#markmuse a:hover {
+  border-bottom-color: #2b6a7a;
+}
+
+#markmuse pre a,
+#markmuse pre span {
+  text-decoration: none;
+  border-bottom: none;
+}
+
+#markmuse ul, #markmuse ol {
+  margin: 0.8rem 0;
+  padding-left: 1.8rem;
+}
+
+#markmuse ul {
+  list-style-type: disc;
+}
+
+#markmuse ol {
+  list-style-type: decimal;
+}
+
+#markmuse li {
+  margin: 0.4rem 0;
+  display: list-item;
+  line-height: 1.8;
+}
+
+#markmuse hr {
+  border: none;
+  border-top: 1px solid #e2e8f0;
+  margin: 2em 0;
+}
+
+#markmuse table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1rem 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+#markmuse th, #markmuse td {
+  border: 1px solid #e2e8f0;
+  padding: 0.6rem 1rem;
+  text-align: left;
+}
+
+#markmuse th {
+  background: #eef3f4;
+  color: #1f3d4d;
+  font-weight: 600;
+}
+
+#markmuse tr:last-child td {
+  border-bottom: none;
+}
+
+#markmuse tr:hover {
+  background-color: #f8f9fa;
+}
+
+#markmuse img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin: 1rem 0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}

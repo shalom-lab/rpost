@@ -1,0 +1,30 @@
+{
+  "categories": [
+    {
+      "id": "r-base",
+      "name": "R 基础",
+      "order": 1
+    },
+    {
+      "id": "r-plot",
+      "name": "R 作图",
+      "order": 2
+    },
+    {
+      "id": "r-stats",
+      "name": "R 统计",
+      "order": 3
+    },
+    {
+      "id": "r-tidyverse",
+      "name": "R tidyverse",
+      "order": 4
+    },
+    {
+      "id": "r-code-management",
+      "name": "R 代码管理",
+      "order": 5
+    }
+  ],
+  "updatedAt": "2026-09-21T00:00:00.000Z"
+}
