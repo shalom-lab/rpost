@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import ReactMarkdown, { defaultUrlTransform } from "react-markdown";
 import { Link } from "react-router-dom";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
+import rehypeKatex from "rehype-katex";
+import "katex/dist/katex.min.css";
 import {
   CONTENT_INDEX_CACHE_KEY,
   contentBodyCacheKey,
@@ -173,7 +176,7 @@ export default function ArticlePreview({
       <section className="content-card" aria-label={showMd ? "已渲染 Markdown" : "原始 QMD"}>
         {showMd ? (
           <div id="markmuse" className="article-md">
-            <ReactMarkdown remarkPlugins={[remarkGfm]} urlTransform={articleUrlTransform}>
+            <ReactMarkdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]} urlTransform={articleUrlTransform}>
               {markdown}
             </ReactMarkdown>
           </div>
