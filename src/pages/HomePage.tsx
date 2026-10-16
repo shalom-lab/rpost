@@ -189,17 +189,11 @@ export default function HomePage() {
                   className="article-card-main"
                   onClick={() => selectArticle(article.id)}
                 >
-                  <span className="article-number">{article.date || article.id}</span>
-                  <div>
-                    <h2>{article.title}</h2>
-                    <p>{article.description}</p>
-                    <div className="article-meta">
-                      {article.category && <span>{article.category}</span>}
-                      {article.md
-                        ? <span className="source-badge soft">已渲染 MD</span>
-                        : <span className="source-muted">仅 QMD</span>}
-                    </div>
+                  <div className="article-meta">
+                    <span>{article.date || article.id}</span>
+                    {article.category && <span>{article.category}</span>}
                   </div>
+                  <h2 title={article.title}>{article.title}</h2>
                 </button>
               </div>
             );
