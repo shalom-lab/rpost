@@ -76,12 +76,14 @@
 .library-pane .article-list.compact .article-card.cat-r-base{background:#faf6f1}
 .library-pane .article-list.compact .article-card.cat-r-tidyverse{background:#f3f8fb}
 .library-pane .article-list.compact .article-card.cat-r-code-management{background:#f6f3f8}
+.library-pane .article-list.compact .article-card.cat-epi{background:#fcf5f6}
 .library-pane .article-list.compact .article-card.cat-other{background:#f7f7f5}
 .library-pane .article-list.compact .article-card.cat-r-plot:hover,
 .library-pane .article-list.compact .article-card.cat-r-stats:hover,
 .library-pane .article-list.compact .article-card.cat-r-base:hover,
 .library-pane .article-list.compact .article-card.cat-r-tidyverse:hover,
 .library-pane .article-list.compact .article-card.cat-r-code-management:hover,
+.library-pane .article-list.compact .article-card.cat-epi:hover,
 .library-pane .article-list.compact .article-card.cat-other:hover{filter:brightness(0.985)}
 .library-pane .article-list.compact .article-card.active{filter:none;box-shadow:inset 3px 0 0 #245f4a}
 .library-pane .article-list.compact .article-card.cat-r-plot.active{background:#e5f0ea}
@@ -89,6 +91,7 @@
 .library-pane .article-list.compact .article-card.cat-r-base.active{background:#f3ebe2}
 .library-pane .article-list.compact .article-card.cat-r-tidyverse.active{background:#e4f1f7}
 .library-pane .article-list.compact .article-card.cat-r-code-management.active{background:#ece6f3}
+.library-pane .article-list.compact .article-card.cat-epi.active{background:#f9e9ec}
 .library-pane .article-list.compact .article-card.cat-other.active{background:#ecece8}
 .article-toolbar-main{display:grid;gap:8px;min-width:0;flex:1}
 .article-toolbar .article-meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
