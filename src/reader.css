@@ -115,3 +115,8 @@ button.view-tab{cursor:pointer;font:650 11px/1.2 Inter,"Segoe UI","Microsoft YaH
 }
 .connection-page{padding-top:24px}
 .connection-page .connection-panel{margin-top:0}
+.reader-topbar{position:sticky;top:0;z-index:50;background:#f5f6f2}
+.library-pane{position:sticky;top:74px;max-height:calc(100dvh - 84px);overflow-y:auto;align-self:start}
+@media(max-width:900px){
+  .library-pane{position:static;max-height:none;overflow:visible}
+}
