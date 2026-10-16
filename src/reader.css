@@ -9,7 +9,7 @@
 .reader-shell:has(.library-split){display:flex;flex-direction:column}
 .reader-shell:has(.library-split)>main{flex:1;min-height:0;display:flex;flex-direction:column}
 .reader-shell:has(.library-split)>.reader-footer{flex-shrink:0}
-.library-split{flex:1;min-height:0;display:grid;grid-template-columns:minmax(340px,400px) minmax(0,1fr);gap:14px;align-items:stretch;height:calc(100vh - 76px);max-height:calc(100vh - 76px);padding:10px 0 12px}
+.library-split{flex:none;min-height:900px;display:grid;grid-template-columns:minmax(340px,400px) minmax(0,1fr);gap:14px;align-items:stretch;height:125vh;max-height:none;padding:10px 0 12px}
 .library-pane,.library-detail{min-width:0;min-height:0;height:100%;display:flex;flex-direction:column;border:1px solid #d7e0d8;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 6px 20px rgba(40,66,54,.04)}
 .reader-topbar{min-height:64px}.reader-brand{gap:9px}.reader-brand>span{width:34px;height:34px;border-radius:8px;font-size:21px}.reader-brand strong{font-size:17px}.reader-brand small{font-size:10px}.reader-actions{gap:8px}.reader-nav a,.reader-github{padding:6px 9px;font-size:13px}
 @media(max-width:640px){.reader-topbar{min-height:58px;padding:6px 0}.reader-nav a,.reader-github{padding:6px 7px;font-size:12px}}
@@ -89,7 +89,7 @@
 .library-detail .article-toolbar{align-items:flex-start;gap:12px}
 button.view-tab{cursor:pointer;font:inherit}
 @media(max-width:900px){
-  .library-split{grid-template-columns:1fr;height:auto;max-height:none;gap:12px}
+  .library-split{grid-template-columns:1fr;min-height:0;height:auto;max-height:none;gap:12px}
   .library-pane{height:min(46vh,420px);max-height:46vh}
   .library-detail{height:min(54vh,560px);max-height:54vh}
 }
