@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ArticlePreview from "../components/ArticlePreview";
 import { CONTENT_INDEX_CACHE_KEY, type Article, fetchIndex } from "../lib/content";
 import { CACHE_UPDATED } from "../lib/local-cache";
 import { fetchWeChatPostStates, type WeChatPostState, type WeChatPostStatus } from "../lib/wechat-posts";
 
-const PAGE_SIZE = 12;
 const STATUSES: WeChatPostStatus[] = ["未上传", "已上传", "已发表"];
 
 function categoryClass(slug: string | undefined): string {
@@ -21,9 +20,9 @@ export default function HomePage() {
   const [query, setQuery] = useState("");
   const [categoriesSelected, setCategoriesSelected] = useState<string[]>([]);
   const [activeStatus, setActiveStatus] = useState<WeChatPostStatus>("未上传");
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const listRef = useRef<HTMLDivElement>(null);
 
   const selectedId = searchParams.get("id") || "";
 
@@ -84,14 +83,6 @@ export default function HomePage() {
     });
   }, [articles, statusById, activeStatus, categoriesSelected, query]);
 
-  const pageCount = Math.max(1, Math.ceil(visible.length / PAGE_SIZE));
-  const safePage = Math.min(page, pageCount);
-  const pageItems = visible.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
-
-  useEffect(() => {
-    if (page > pageCount) setPage(pageCount);
-  }, [page, pageCount]);
-
   const activeId = visible.some((item) => item.id === selectedId) ? selectedId : visible[0]?.id || "";
 
   useEffect(() => {
@@ -103,7 +94,12 @@ export default function HomePage() {
     setCategoriesSelected((current) => current.includes(slug)
       ? current.filter((value) => value !== slug)
       : [...current, slug]);
-    setPage(1);
+    if (listRef.current) listRef.current.scrollTop = 0;
+  }
+
+  function selectStatus(status: WeChatPostStatus) {
+    setActiveStatus(status);
+    if (listRef.current) listRef.current.scrollTop = 0;
   }
 
   function selectArticle(id: string) {
@@ -123,14 +119,13 @@ export default function HomePage() {
               aria-selected={activeStatus === status}
               aria-controls="library-article-list"
               tabIndex={activeStatus === status ? 0 : -1}
-              onClick={() => { setActiveStatus(status); setPage(1); }}
+              onClick={() => selectStatus(status)}
               onKeyDown={(event) => {
                 if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
                 event.preventDefault();
                 const index = STATUSES.indexOf(status);
                 const next = STATUSES[(index + (event.key === "ArrowRight" ? 1 : -1) + STATUSES.length) % STATUSES.length];
-                setActiveStatus(next);
-                setPage(1);
+                selectStatus(next);
                 document.getElementById(`library-tab-${next}`)?.focus();
               }}
             >
@@ -149,7 +144,10 @@ export default function HomePage() {
             <input
               type="search"
               value={query}
-              onChange={(event) => { setQuery(event.target.value); setPage(1); }}
+              onChange={(event) => {
+                setQuery(event.target.value);
+                if (listRef.current) listRef.current.scrollTop = 0;
+              }}
               placeholder="搜索标题、内容或标签…"
               aria-label="搜索文章"
             />
@@ -175,8 +173,8 @@ export default function HomePage() {
           <p className="reader-state">没有匹配的文章。</p>
         )}
 
-        <div className="article-list compact" id="library-article-list" role="tabpanel" aria-labelledby={`library-tab-${activeStatus}`}>
-          {pageItems.map((article) => {
+        <div ref={listRef} className="article-list compact" id="library-article-list" role="tabpanel" aria-labelledby={`library-tab-${activeStatus}`}>
+          {visible.map((article) => {
             const active = article.id === activeId;
             const cat = categoryClass(article.categorySlug || article.category);
             return (
@@ -200,25 +198,6 @@ export default function HomePage() {
           })}
         </div>
 
-        {visible.length > PAGE_SIZE && (
-          <nav className="library-pager" aria-label="文章翻页">
-            <button
-              type="button"
-              disabled={safePage <= 1}
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-            >
-              上一页
-            </button>
-            <span>{safePage} / {pageCount}</span>
-            <button
-              type="button"
-              disabled={safePage >= pageCount}
-              onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-            >
-              下一页
-            </button>
-          </nav>
-        )}
       </aside>
 
       <section className="library-detail" aria-label="文章预览">
