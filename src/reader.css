@@ -113,3 +113,5 @@ button.view-tab{cursor:pointer;font:650 11px/1.2 Inter,"Segoe UI","Microsoft YaH
 @media(max-width:900px){
   .library-split{grid-template-columns:1fr;gap:12px}
 }
+.connection-page{padding-top:24px}
+.connection-page .connection-panel{margin-top:0}

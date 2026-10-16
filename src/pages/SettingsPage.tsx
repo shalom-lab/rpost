@@ -33,12 +33,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <section className="connection-page">
-      <header>
-        <span className="eyebrow">连接</span>
-        <h1>GitHub 连接</h1>
-        <p>本站（rpost）只部署前端壳，不附带 Markdown 源文件。填写获准账号的 Token 与私有内容仓 <code>owner/repo</code>（默认 <code>shalom-lab/r-post</code>），经 GitHub API 拉取清单与正文。Token 只保存在当前浏览器；封面页可用有 Actions: write 权限的 Token 触发内容仓草稿上传。</p>
-      </header>
+    <section className="connection-page" aria-label="GitHub 连接">
       <div className="connection-panel">
         <label>
           GitHub 仓库
