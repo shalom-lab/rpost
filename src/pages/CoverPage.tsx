@@ -140,13 +140,9 @@ function CoverCard({
               disabled={Boolean(uploadState)}
               onClick={() => onUpload(state)}
               title={uploadState === "sending" ? "正在提交上传请求" : uploadState === "queued" ? "上传请求已提交" : "上传到微信草稿"}
-              aria-label={`${item.title}：${uploadState === "sending" ? "正在提交上传请求" : uploadState === "queued" ? "上传请求已提交" : "上传到微信草稿"}`}
+              aria-label={`${item.title}：${uploadState === "sending" ? "正在提交上传请求" : uploadState === "queued" ? "上传请求已提交" : "上传草稿"}`}
             >
-              {uploadState === "queued" ? (
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3.2 3.2L13 4.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              ) : (
-                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 10V2.5m0 0L5.2 5.3M8 2.5l2.8 2.8M3 10.5v2.2c0 .7.6 1.3 1.3 1.3h7.4c.7 0 1.3-.6 1.3-1.3v-2.2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
-              )}
+              {uploadState === "sending" ? "提交中…" : uploadState === "queued" ? "已提交" : "上传草稿"}
             </button>
           )}
         </div>
@@ -170,6 +166,7 @@ export default function CoverPage() {
   const [error, setError] = useState("");
   const [preview, setPreview] = useState<Preview | null>(null);
   const [uploadStates, setUploadStates] = useState<Record<string, UploadState>>({});
+  const [activeStatus, setActiveStatus] = useState<WeChatPostStatus>("未上传");
   const submitted = useRef(new Set<string>());
 
   useEffect(() => {
@@ -227,7 +224,7 @@ export default function CoverPage() {
   })), [cards]);
   const pendingItems = useMemo(() => cards.map(({ item }) => item).filter(needsCover), [cards]);
   const pending = pendingItems.length;
-  const ready = cards.length - pending;
+  const activeSection = sections.find(({ status }) => status === activeStatus);
   const [copiedBrief, setCopiedBrief] = useState(false);
 
   async function uploadDraft(state: WeChatPostState) {
@@ -263,14 +260,31 @@ export default function CoverPage() {
 
   return (
     <section className="cover-page">
-      <header className="cover-page-header">
-        <div className="cover-page-header-text">
-          <span className="eyebrow">公众号</span>
-          <h1>封面与公众号状态</h1>
-          <p>
-            文章状态来自 <code>wechat/all-posts-state.json</code>，封面来自 <code>cover/cover.json</code>。无图或未启用的显示「待补充」；未上传且封面完整的文章可提交微信草稿上传请求。
-            {cards.length > 0 && ` 合计 ${cards.length} · 封面已有 ${ready} · 待补充 ${pending}。`}
-          </p>
+      <h1 className="cover-visually-hidden">封面与公众号状态</h1>
+      <div className="cover-status-toolbar">
+        <div className="cover-status-tabs" role="tablist" aria-label="公众号文章状态">
+          {sections.map(({ status, cards: sectionCards }) => (
+            <button
+              key={status}
+              id={`cover-tab-${status}`}
+              type="button"
+              role="tab"
+              aria-selected={activeStatus === status}
+              aria-controls="cover-status-panel"
+              tabIndex={activeStatus === status ? 0 : -1}
+              onClick={() => setActiveStatus(status)}
+              onKeyDown={(event) => {
+                if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+                event.preventDefault();
+                const index = STATUSES.indexOf(status);
+                const next = STATUSES[(index + (event.key === "ArrowRight" ? 1 : -1) + STATUSES.length) % STATUSES.length];
+                setActiveStatus(next);
+                document.getElementById(`cover-tab-${next}`)?.focus();
+              }}
+            >
+              {status}<span className="cover-tab-count">{sectionCards.length}</span>
+            </button>
+          ))}
         </div>
         {pending > 0 && (
           <button
@@ -292,18 +306,17 @@ export default function CoverPage() {
             )}
           </button>
         )}
-      </header>
+      </div>
 
       {loading && <p className="reader-state">正在加载封面…</p>}
       {error && <p className="reader-state error">{error}</p>}
       {!loading && !error && !cards.length && <p className="reader-state">还没有文章。</p>}
 
-      {!loading && !error && sections.map(({ status, cards: sectionCards }) => (
-        <section className="cover-status-section" key={status} aria-label={`${status}文章`}>
-          <h2>{status}<span>{sectionCards.length}</span></h2>
-          {sectionCards.length ? (
+      {!loading && !error && activeSection && (
+        <section className="cover-status-section" id="cover-status-panel" role="tabpanel" aria-labelledby={`cover-tab-${activeStatus}`}>
+          {activeSection.cards.length ? (
             <div className="cover-grid">
-              {sectionCards.map(({ item, state }) => (
+              {activeSection.cards.map(({ item, state }) => (
                 <CoverCard
                   key={item.id}
                   item={item}
@@ -314,9 +327,9 @@ export default function CoverPage() {
                 />
               ))}
             </div>
-          ) : <p className="cover-status-empty">暂无{status}文章。</p>}
+          ) : <p className="cover-status-empty">暂无{activeStatus}文章。</p>}
         </section>
-      ))}
+      )}
 
       {preview && (
         <div className="cover-lightbox" role="dialog" aria-label={preview.title} onClick={() => setPreview(null)}>

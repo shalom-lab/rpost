@@ -19,7 +19,18 @@
 .library-pane .article-list.compact .article-card.active{box-shadow:inset 3px 0 0 #245f4a}
 .library-pane .article-card-main{display:grid;grid-template-columns:minmax(0,1fr);gap:4px;width:100%;padding:13px 16px;border:0;background:transparent;text-align:left;cursor:pointer;color:inherit;font:inherit}
 .library-pane .article-card-main:focus-visible{outline:2px solid #9ab8a5;outline-offset:-2px}
-.cover-status-section{padding:18px 0 12px;border-bottom:1px solid #dde3dc}.cover-status-section:last-of-type{border-bottom:0}.cover-status-section>h2{display:flex;align-items:center;gap:10px;margin:0;font:650 22px/1.4 Georgia,"Noto Serif SC",serif}.cover-status-section>h2 span{display:inline-grid;place-items:center;min-width:24px;height:24px;padding:0 7px;border-radius:999px;background:#e9f1eb;color:#245f4a;font:700 12px/1 sans-serif}.cover-status-section .cover-grid{padding-top:18px}.cover-status-empty{margin:12px 0 16px;color:#8a958d;font-size:13px}.cover-card-status{font-size:11px;color:#78847c}.cover-card-actions .cover-upload-action{display:inline-grid;place-items:center;width:25px;height:23px;padding:0;color:#fff;background:#245f4a;border-color:#245f4a}.cover-card-actions .cover-upload-action:hover{background:#194d3b;color:#fff}.cover-card-actions .cover-upload-action:disabled{opacity:.55;cursor:not-allowed}.cover-card-actions .cover-upload-action svg{width:14px;height:14px}
+.cover-status-section{padding:0;border:0}.cover-status-section .cover-grid{padding-top:20px}.cover-status-empty{margin:12px 0 16px;color:#8a958d;font-size:13px}.cover-card-status{font-size:11px;color:#78847c}.cover-card-actions .cover-upload-action{display:inline-flex;width:auto;height:auto;padding:3px 8px;white-space:nowrap;color:#fff;background:#245f4a;border-color:#245f4a}.cover-card-actions .cover-upload-action:hover{background:#194d3b;color:#fff}.cover-card-actions .cover-upload-action:disabled{opacity:.55;cursor:not-allowed}
+.cover-visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.cover-page{padding-top:24px}
+.cover-status-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #dde3dc}
+.cover-status-tabs{display:flex;align-items:center;gap:4px;overflow-x:auto}
+.cover-status-tabs button{display:inline-flex;align-items:center;gap:8px;flex-shrink:0;padding:11px 15px;border:0;border-bottom:3px solid transparent;background:transparent;color:#647269;font-size:14px;font-weight:650;cursor:pointer}
+.cover-status-tabs button:hover{color:#245f4a;background:#edf3ee}
+.cover-status-tabs button[aria-selected="true"]{color:#245f4a;border-bottom-color:#245f4a}
+.cover-status-tabs button:focus-visible,.cover-card-actions button:focus-visible,.cover-copy-pending:focus-visible{outline:3px solid #9ab8a5;outline-offset:-3px}
+.cover-tab-count{display:inline-grid;place-items:center;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#e9f1eb;color:#245f4a;font-size:11px}
+.cover-copy-pending{margin-top:0;margin-right:2px}
+@media(max-width:640px){.cover-page{padding-top:16px}.cover-status-tabs button{padding:10px 9px;font-size:12px;gap:5px}}
 .library-pane .article-number{font-size:11px;color:#78847c;padding:0}
 .library-pane .article-card h2{font:650 14px/1.4 Georgia,"Noto Serif SC",serif;margin:0 0 4px}
 .library-pane .article-card p{margin:0;font-size:12px;line-height:1.45;color:#6f7b73;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
