@@ -138,28 +138,36 @@ export default function HomePage() {
             </button>
           ))}
         </div>
-        <section className="library-tools" aria-label="文章筛选">
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => { setQuery(event.target.value); setPage(1); }}
-            placeholder="搜索标题、内容或标签…"
-            aria-label="搜索文章"
-          />
-          <div className="library-category-tags" role="group" aria-label="按分类筛选，可多选">
-            {categories.map(([slug, name]) => (
-              <button
-                key={slug}
-                type="button"
-                className={`library-category-tag ${categoryClass(slug)}`}
-                aria-pressed={categoriesSelected.includes(slug)}
-                onClick={() => toggleCategory(slug)}
-              >
-                {name}
-              </button>
-            ))}
-          </div>
-        </section>
+        <details className="library-filter-panel">
+          <summary>
+            <span>搜索与分类</span>
+            {(query.trim() || categoriesSelected.length > 0) && (
+              <small>{[query.trim() && "已搜索", categoriesSelected.length > 0 && `已选 ${categoriesSelected.length} 类`].filter(Boolean).join(" · ")}</small>
+            )}
+          </summary>
+          <section className="library-tools" aria-label="文章筛选">
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => { setQuery(event.target.value); setPage(1); }}
+              placeholder="搜索标题、内容或标签…"
+              aria-label="搜索文章"
+            />
+            <div className="library-category-tags" role="group" aria-label="按分类筛选，可多选">
+              {categories.map(([slug, name]) => (
+                <button
+                  key={slug}
+                  type="button"
+                  className={`library-category-tag ${categoryClass(slug)}`}
+                  aria-pressed={categoriesSelected.includes(slug)}
+                  onClick={() => toggleCategory(slug)}
+                >
+                  {name}
+                </button>
+              ))}
+            </div>
+          </section>
+        </details>
 
         {loading && <p className="reader-state">正在加载文章…</p>}
         {error && <p className="reader-state error">{error}</p>}
