@@ -13,6 +13,22 @@
 .library-pane,.library-detail{min-width:0;min-height:0;height:100%;display:flex;flex-direction:column;border:1px solid #d7e0d8;border-radius:12px;background:#fff;overflow:hidden;box-shadow:0 6px 20px rgba(40,66,54,.04)}
 .library-pane .library-tools{flex-shrink:0;padding:12px 14px;border-bottom:1px solid #dde3dc;display:flex;flex-direction:column;align-items:stretch;gap:8px}
 .library-pane .library-tools input,.library-pane .library-tools select{width:100%;height:36px;font-size:13px}
+.library-status-tabs{display:flex;flex-shrink:0;gap:2px;padding:0 10px;border-bottom:1px solid #dde3dc;overflow-x:auto}
+.library-status-tabs button{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:1;min-width:max-content;padding:12px 7px 10px;border:0;border-bottom:3px solid transparent;background:transparent;color:#647269;font-size:12px;font-weight:650;cursor:pointer}
+.library-status-tabs button:hover{background:#edf3ee;color:#245f4a}
+.library-status-tabs button[aria-selected="true"]{border-bottom-color:#245f4a;color:#245f4a}
+.library-tab-count{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:#e9f1eb;color:#245f4a;font-size:10px}
+.library-category-tags{display:flex;flex-wrap:wrap;gap:7px;padding-top:2px}
+.library-category-tags .library-category-tag{width:auto;height:auto;min-height:29px;padding:4px 10px;border:1px solid #c9d7ce;border-radius:999px;background:#eef5f0;color:#2b604b;font-size:12px;line-height:1.3;cursor:pointer}
+.library-category-tags .library-category-tag:hover{filter:brightness(.96)}
+.library-category-tags .library-category-tag[aria-pressed="true"]{box-shadow:inset 0 0 0 1px currentColor;font-weight:700}
+.library-category-tag.cat-r-plot{background:#e9f5ee;color:#286349;border-color:#b9d8c4}
+.library-category-tag.cat-r-stats{background:#edf0fa;color:#4b5b9b;border-color:#cad1ef}
+.library-category-tag.cat-r-base{background:#faf1e8;color:#95613d;border-color:#e6cdb9}
+.library-category-tag.cat-r-tidyverse{background:#eaf5f8;color:#27677c;border-color:#b8d9e3}
+.library-category-tag.cat-r-code-management{background:#f3edfa;color:#75519a;border-color:#dac7ed}
+.library-category-tag.cat-epi{background:#fbeef0;color:#9a4c60;border-color:#ebc9d0}
+.library-status-tabs button:focus-visible,.library-category-tag:focus-visible{outline:3px solid #9ab8a5;outline-offset:-3px}
 .library-pane .article-list{flex:1;min-height:0;overflow-x:hidden;overflow-y:auto;padding:0;margin:0;display:block;align-content:start}
 .library-pane .article-list.compact .article-card{padding:0;height:auto;align-self:start;border-bottom:1px solid #edf1ed;transition:background .12s}
 .library-pane .article-list.compact .article-card:hover{filter:brightness(0.985)}

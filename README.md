@@ -27,6 +27,8 @@ npm run test:access
 
 封面页从内容仓的 `wechat/all-posts-state.json` 读取「未上传 / 已上传 / 已发表」状态。未上传且封面可用的卡片可触发 `wechat-draft.yml`，只传文章 ID，不指定主题；GitHub 接受请求后会提示已提交，状态以内容仓台账和后续状态清单更新为准。
 
+文章页也按这三个状态切换文章列表；分类以可多选的标签按钮筛选，搜索词再与状态、分类条件共同过滤。
+
 ## IndexedDB 持久化
 
 库名 `rpost-cache-v2`：
