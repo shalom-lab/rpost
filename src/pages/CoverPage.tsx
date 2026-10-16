@@ -63,7 +63,6 @@ function CoverCard({
   onUpload: (state: WeChatPostState) => void;
   uploadState?: UploadState;
 }) {
-  const [copied, setCopied] = useState<"id" | "title" | "">("");
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
   const [src, setSrc] = useState<string | null>(null);
   const pending = needsCover(item);
@@ -88,10 +87,9 @@ function CoverCard({
   async function copy(kind: "id" | "title", text: string) {
     try {
       await copyText(text);
-      setCopied(kind);
-      window.setTimeout(() => setCopied(""), 1200);
+      showToast(`${kind === "id" ? "文章 ID" : "文章标题"}已复制`, "ok");
     } catch {
-      setCopied("");
+      showToast("复制失败", "error");
     }
   }
 
@@ -128,10 +126,10 @@ function CoverCard({
         <span className="cover-card-status">{state.date} · {state.status}</span>
         <div className="cover-card-actions">
           <button type="button" onClick={() => void copy("id", item.id)}>
-            {copied === "id" ? "已复制" : "复制 id"}
+            复制 id
           </button>
           <button type="button" onClick={() => void copy("title", item.title)}>
-            {copied === "title" ? "已复制" : "复制标题"}
+            复制标题
           </button>
           {state.status === "未上传" && !pending && src && size && (
             <button
@@ -165,6 +163,7 @@ export default function CoverPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [confirmUpload, setConfirmUpload] = useState<WeChatPostState | null>(null);
   const [uploadStates, setUploadStates] = useState<Record<string, UploadState>>({});
   const [activeStatus, setActiveStatus] = useState<WeChatPostStatus>("未上传");
   const submitted = useRef(new Set<string>());
@@ -217,6 +216,15 @@ export default function CoverPage() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [preview]);
+
+  useEffect(() => {
+    if (!confirmUpload) return;
+    function onKey(event: KeyboardEvent) {
+      if (event.key === "Escape") setConfirmUpload(null);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [confirmUpload]);
 
   const sections = useMemo(() => STATUSES.map((status) => ({
     status,
@@ -322,7 +330,7 @@ export default function CoverPage() {
                   item={item}
                   state={state}
                   onPreview={setPreview}
-                  onUpload={(post) => void uploadDraft(post)}
+                  onUpload={setConfirmUpload}
                   uploadState={uploadStates[item.id]}
                 />
               ))}
@@ -337,6 +345,22 @@ export default function CoverPage() {
             <img src={preview.src} alt={preview.title} />
             <figcaption>{preview.title}</figcaption>
           </figure>
+        </div>
+      )}
+      {confirmUpload && (
+        <div className="cover-confirm-overlay" onClick={() => setConfirmUpload(null)}>
+          <div className="cover-confirm-dialog" role="alertdialog" aria-modal="true" aria-labelledby="cover-confirm-title" aria-describedby="cover-confirm-description" onClick={(event) => event.stopPropagation()}>
+            <h2 id="cover-confirm-title">确认上传微信草稿？</h2>
+            <p id="cover-confirm-description">将提交「{confirmUpload.title}」的草稿上传请求。</p>
+            <div className="cover-confirm-actions">
+              <button type="button" onClick={() => setConfirmUpload(null)}>取消</button>
+              <button type="button" className="primary" autoFocus onClick={() => {
+                const post = confirmUpload;
+                setConfirmUpload(null);
+                void uploadDraft(post);
+              }}>确认上传</button>
+            </div>
+          </div>
         </div>
       )}
     </section>
