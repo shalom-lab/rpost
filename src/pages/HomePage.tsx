@@ -191,7 +191,7 @@ export default function HomePage() {
                 >
                   <div className="article-meta">
                     <span>{article.date || article.id}</span>
-                    {article.category && <span>{article.category}</span>}
+                    {article.categorySlug && <span title={article.category}>{article.categorySlug}</span>}
                   </div>
                   <h2 title={article.title}>{article.title}</h2>
                 </button>

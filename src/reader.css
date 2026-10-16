@@ -28,8 +28,8 @@
 .library-status-tabs button:hover{background:#edf3ee;color:#245f4a}
 .library-status-tabs button[aria-selected="true"]{border-bottom-color:#245f4a;color:#245f4a}
 .library-tab-count{display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:#e9f1eb;color:#245f4a;font-size:10px}
-.library-category-tags{display:flex;flex-wrap:wrap;gap:7px;padding-top:2px}
-.library-category-tags .library-category-tag{width:auto;height:auto;min-height:29px;padding:4px 10px;border:1px solid #c9d7ce;border-radius:999px;background:#eef5f0;color:#2b604b;font-size:12px;line-height:1.3;cursor:pointer}
+.library-category-tags{display:flex;flex-wrap:wrap;gap:5px;padding-top:2px}
+.library-category-tags .library-category-tag{width:auto;height:auto;min-height:24px;padding:2px 8px;border:1px solid #c9d7ce;border-radius:999px;background:#eef5f0;color:#2b604b;font-size:11px;line-height:1.2;cursor:pointer}
 .library-category-tags .library-category-tag:hover{filter:brightness(.96)}
 .library-category-tags .library-category-tag[aria-pressed="true"]{box-shadow:inset 0 0 0 1px currentColor;font-weight:700}
 .library-category-tag.cat-r-plot{background:#e9f5ee;color:#286349;border-color:#b9d8c4}
