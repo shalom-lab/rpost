@@ -78,7 +78,6 @@ export default function RequireAccess({ children }: { children?: ReactNode }) {
         <header>
           <span className="eyebrow">访问</span>
           <h1>连接后阅读</h1>
-          <p>验证状态在右上角提示。通过后自动进入；未通过请先填写 Token。</p>
         </header>
         <p className="connection-links">
           <Link to="/settings">填写或更新 Token</Link>
