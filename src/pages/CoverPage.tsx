@@ -1,8 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
-import { CONTENT_INDEX_CACHE_KEY, fetchIndex } from "../lib/content";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { COVER_INDEX_CACHE_KEY, fetchCovers, loadCoverImageUrl, type CoverItem } from "../lib/covers";
 import { CACHE_UPDATED } from "../lib/local-cache";
 import { showToast } from "../lib/toast";
+import { dispatchWeChatDraft, fetchWeChatPostStates, type WeChatPostState, type WeChatPostStatus } from "../lib/wechat-posts";
+
+const STATUSES: WeChatPostStatus[] = ["未上传", "已上传", "已发表"];
+type PostCard = { state: WeChatPostState; item: CoverItem };
+type UploadState = "sending" | "queued";
 
 async function copyText(text: string) {
   await navigator.clipboard.writeText(text);
@@ -48,10 +52,16 @@ type Preview = { src: string; title: string };
 
 function CoverCard({
   item,
+  state,
   onPreview,
+  onUpload,
+  uploadState,
 }: {
   item: CoverItem;
+  state: WeChatPostState;
   onPreview: (preview: Preview | null) => void;
+  onUpload: (state: WeChatPostState) => void;
+  uploadState?: UploadState;
 }) {
   const [copied, setCopied] = useState<"id" | "title" | "">("");
   const [size, setSize] = useState<{ w: number; h: number } | null>(null);
@@ -115,6 +125,7 @@ function CoverCard({
       <div className="cover-card-body">
         <code className="cover-id" title={item.id}>{item.id}</code>
         <h2 title={item.title}>{item.title}</h2>
+        <span className="cover-card-status">{state.date} · {state.status}</span>
         <div className="cover-card-actions">
           <button type="button" onClick={() => void copy("id", item.id)}>
             {copied === "id" ? "已复制" : "复制 id"}
@@ -122,6 +133,22 @@ function CoverCard({
           <button type="button" onClick={() => void copy("title", item.title)}>
             {copied === "title" ? "已复制" : "复制标题"}
           </button>
+          {state.status === "未上传" && !pending && src && size && (
+            <button
+              type="button"
+              className="cover-upload-action"
+              disabled={Boolean(uploadState)}
+              onClick={() => onUpload(state)}
+              title={uploadState === "sending" ? "正在提交上传请求" : uploadState === "queued" ? "上传请求已提交" : "上传到微信草稿"}
+              aria-label={`${item.title}：${uploadState === "sending" ? "正在提交上传请求" : uploadState === "queued" ? "上传请求已提交" : "上传到微信草稿"}`}
+            >
+              {uploadState === "queued" ? (
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m3 8 3.2 3.2L13 4.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              ) : (
+                <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 10V2.5m0 0L5.2 5.3M8 2.5l2.8 2.8M3 10.5v2.2c0 .7.6 1.3 1.3 1.3h7.4c.7 0 1.3-.6 1.3-1.3v-2.2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              )}
+            </button>
+          )}
         </div>
         <p className="cover-card-meta">
           {pending
@@ -138,42 +165,31 @@ function CoverCard({
 }
 
 export default function CoverPage() {
-  const [covers, setCovers] = useState<CoverItem[]>([]);
+  const [cards, setCards] = useState<PostCard[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [uploadStates, setUploadStates] = useState<Record<string, UploadState>>({});
+  const submitted = useRef(new Set<string>());
 
   useEffect(() => {
     let cancelled = false;
-    async function loadCovers() {
+    async function loadCards() {
       try {
-        const [index, coverIndex] = await Promise.all([fetchIndex(), fetchCovers()]);
+        const [states, coverIndex] = await Promise.all([fetchWeChatPostStates(), fetchCovers()]);
         const byId = new Map(coverIndex.covers.map((row) => [row.id, row]));
-        const merged: CoverItem[] = (index.articles || [])
-          .filter((article) => article.qmd)
-          .map((article) => {
-            const row = byId.get(article.id);
-            byId.delete(article.id);
-            if (row) {
-              return {
-                ...row,
-                title: article.title || row.title,
-              };
-            }
-            return {
-              id: article.id,
-              title: article.title,
-              image: null,
-              active: false,
-              prompt: null,
-              note: "待补充",
-            };
-          });
-        // cover.json 里多出的旧 id 仍展示，方便清理
-        for (const row of byId.values()) merged.push(row);
+        const merged: PostCard[] = states.map((state) => {
+          const row = byId.get(state.id);
+          return {
+            state,
+            item: row
+              ? { ...row, title: state.title }
+              : { id: state.id, title: state.title, image: null, active: false, prompt: null, note: "待补充" },
+          };
+        });
 
         if (!cancelled) {
-          setCovers(merged);
+          setCards(merged);
           setError("");
         }
       } catch (reason) {
@@ -182,15 +198,17 @@ export default function CoverPage() {
         if (!cancelled) setLoading(false);
       }
     }
-    void loadCovers();
+    void loadCards();
     function onCache(event: Event) {
       const key = (event as CustomEvent<{ key?: string }>).detail?.key;
-      if (key === COVER_INDEX_CACHE_KEY || key === CONTENT_INDEX_CACHE_KEY) void loadCovers();
+      if (key === COVER_INDEX_CACHE_KEY) void loadCards();
     }
     window.addEventListener(CACHE_UPDATED, onCache);
+    window.addEventListener("focus", loadCards);
     return () => {
       cancelled = true;
       window.removeEventListener(CACHE_UPDATED, onCache);
+      window.removeEventListener("focus", loadCards);
     };
   }, []);
 
@@ -203,19 +221,33 @@ export default function CoverPage() {
     return () => window.removeEventListener("keydown", onKey);
   }, [preview]);
 
-  const ordered = useMemo(() => {
-    return [...covers].sort((a, b) => {
-      const ap = needsCover(a) ? 0 : 1;
-      const bp = needsCover(b) ? 0 : 1;
-      if (ap !== bp) return ap - bp;
-      return b.id.localeCompare(a.id);
-    });
-  }, [covers]);
-
-  const pendingItems = useMemo(() => ordered.filter(needsCover), [ordered]);
+  const sections = useMemo(() => STATUSES.map((status) => ({
+    status,
+    cards: cards.filter(({ state }) => state.status === status),
+  })), [cards]);
+  const pendingItems = useMemo(() => cards.map(({ item }) => item).filter(needsCover), [cards]);
   const pending = pendingItems.length;
-  const ready = ordered.length - pending;
+  const ready = cards.length - pending;
   const [copiedBrief, setCopiedBrief] = useState(false);
+
+  async function uploadDraft(state: WeChatPostState) {
+    if (submitted.current.has(state.id)) return;
+    submitted.current.add(state.id);
+    setUploadStates((current) => ({ ...current, [state.id]: "sending" }));
+    try {
+      await dispatchWeChatDraft(state.id);
+      setUploadStates((current) => ({ ...current, [state.id]: "queued" }));
+      showToast(`GitHub 已接收「${state.title}」的草稿上传请求。`, "ok");
+    } catch (reason) {
+      submitted.current.delete(state.id);
+      setUploadStates((current) => {
+        const next = { ...current };
+        delete next[state.id];
+        return next;
+      });
+      showToast(reason instanceof Error ? reason.message : "提交草稿上传请求失败。", "error");
+    }
+  }
 
   async function copyPendingBrief() {
     if (!pendingItems.length) return;
@@ -234,10 +266,10 @@ export default function CoverPage() {
       <header className="cover-page-header">
         <div className="cover-page-header-text">
           <span className="eyebrow">公众号</span>
-          <h1>封面预览</h1>
+          <h1>封面与公众号状态</h1>
           <p>
-            对照文章清单与 <code>cover/cover.json</code>。无图或未启用的显示「待补充」；有图可点放大，按钮复制 id / 标题。
-            {ordered.length > 0 && ` 合计 ${ordered.length} · 已有 ${ready} · 待补充 ${pending}。`}
+            文章状态来自 <code>wechat/all-posts-state.json</code>，封面来自 <code>cover/cover.json</code>。无图或未启用的显示「待补充」；未上传且封面完整的文章可提交微信草稿上传请求。
+            {cards.length > 0 && ` 合计 ${cards.length} · 封面已有 ${ready} · 待补充 ${pending}。`}
           </p>
         </div>
         {pending > 0 && (
@@ -264,13 +296,27 @@ export default function CoverPage() {
 
       {loading && <p className="reader-state">正在加载封面…</p>}
       {error && <p className="reader-state error">{error}</p>}
-      {!loading && !error && !ordered.length && <p className="reader-state">还没有文章。</p>}
+      {!loading && !error && !cards.length && <p className="reader-state">还没有文章。</p>}
 
-      <div className="cover-grid">
-        {ordered.map((item) => (
-          <CoverCard key={item.id} item={item} onPreview={setPreview} />
-        ))}
-      </div>
+      {!loading && !error && sections.map(({ status, cards: sectionCards }) => (
+        <section className="cover-status-section" key={status} aria-label={`${status}文章`}>
+          <h2>{status}<span>{sectionCards.length}</span></h2>
+          {sectionCards.length ? (
+            <div className="cover-grid">
+              {sectionCards.map(({ item, state }) => (
+                <CoverCard
+                  key={item.id}
+                  item={item}
+                  state={state}
+                  onPreview={setPreview}
+                  onUpload={(post) => void uploadDraft(post)}
+                  uploadState={uploadStates[item.id]}
+                />
+              ))}
+            </div>
+          ) : <p className="cover-status-empty">暂无{status}文章。</p>}
+        </section>
+      ))}
 
       {preview && (
         <div className="cover-lightbox" role="dialog" aria-label={preview.title} onClick={() => setPreview(null)}>

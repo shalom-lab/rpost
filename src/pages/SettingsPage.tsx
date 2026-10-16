@@ -37,7 +37,7 @@ export default function SettingsPage() {
       <header>
         <span className="eyebrow">连接</span>
         <h1>GitHub 连接</h1>
-        <p>本站（rpost）只部署阅读壳，不附带 Markdown 源文件。填写获准账号的 Token 与私有内容仓 <code>owner/repo</code>（默认 <code>shalom-lab/r-post</code>），经 GitHub API 拉取清单与正文。Token 只保存在当前浏览器，不改仓库。公众号草稿/群发仍在内容仓脚本处理。</p>
+        <p>本站（rpost）只部署前端壳，不附带 Markdown 源文件。填写获准账号的 Token 与私有内容仓 <code>owner/repo</code>（默认 <code>shalom-lab/r-post</code>），经 GitHub API 拉取清单与正文。Token 只保存在当前浏览器；封面页可用有 Actions: write 权限的 Token 触发内容仓草稿上传。</p>
       </header>
       <div className="connection-panel">
         <label>
