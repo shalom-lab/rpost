@@ -31,21 +31,21 @@
     ]
   },
   {
-    "category": "流行病学",
-    "items": [
-      {
-        "title": "因果科普书",
-        "href": "https://mp.weixin.qq.com/s/4DYfhPm5ho4AkwUTWHywPg",
-        "itemShowType": "8"
-      }
-    ]
-  },
-  {
     "category": "R代码管理",
     "items": [
       {
         "title": "临时存数据",
         "href": "https://mp.weixin.qq.com/s/PpLX4zY9LRURf8j8ll_fng",
+        "itemShowType": "8"
+      }
+    ]
+  },
+  {
+    "category": "流行病学",
+    "items": [
+      {
+        "title": "因果科普书",
+        "href": "https://mp.weixin.qq.com/s/4DYfhPm5ho4AkwUTWHywPg",
         "itemShowType": "8"
       }
     ]
